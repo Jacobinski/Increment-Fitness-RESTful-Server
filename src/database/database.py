@@ -1,4 +1,3 @@
-from datetime import datetime
 from pony.orm import *
 
 # Generate a database variable which represents our MySQL database.
@@ -9,8 +8,8 @@ class UserWorkoutData(db.Entity):
     """Python representation of User Workout Data Table
     """
     user_id = Required(int)
-    start_time = Required(datetime)
-    end_time = Required(datetime)
+    start_time = Required(int, size=32)
+    end_time = Required(int, size=32)
     repetitions = Required(int, size=16)
     weight = Required(int, size=16)
     exercise = Required(int, size=16)
@@ -21,14 +20,14 @@ class UserWorkoutData(db.Entity):
 
 
 @db_session
-def add_workout(user_id: int, start_time: datetime, end_time: datetime, repetitions: int, weight: int,
+def add_workout(user_id: int, start_time: int, end_time: int, repetitions: int, weight: int,
                 exercise: int, variant: int) -> None:
     """Command to add workout to SQL table
 
     Args:
         user_id: The user ID who did the workout.
-        start_time: The workout's start time.
-        end_time: The workout's end time.
+        start_time: The workout's start time in epoch
+        end_time: The workout's end time in epoch
         repetitions: The number of repetitions in the set.
         weight: The weight of the set in kilograms.
         exercise: The exercise ID associated with the activity.
