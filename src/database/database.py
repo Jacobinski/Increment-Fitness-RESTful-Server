@@ -21,7 +21,7 @@ class UserWorkoutData(db.Entity):
 
 @db_session
 def add_workout(user_id: int, start_time: int, end_time: int, repetitions: int, weight: int,
-                exercise: int, variant: int) -> None:
+                exercise: int, variant: int, skeleton_data: bytes = None) -> None:
     """Command to add workout to SQL table
 
     :param user_id: The user ID who did the workout.
@@ -31,6 +31,7 @@ def add_workout(user_id: int, start_time: int, end_time: int, repetitions: int, 
     :param weight: The weight of the set in kilograms.
     :param exercise: The exercise ID associated with the activity.
     :param variant: The variant of the activity. Left hand, right hand, etc.
+    :param skeleton_data: A binary file for the skeleton activity file.
     :return: Nothing.
     """
 
@@ -41,7 +42,8 @@ def add_workout(user_id: int, start_time: int, end_time: int, repetitions: int, 
         repetitions=repetitions,
         weight=weight,
         exercise=exercise,
-        variant=variant
+        variant=variant,
+        skeleton_data=skeleton_data
     )
 
 
