@@ -24,18 +24,16 @@ def add_workout(user_id: int, start_time: int, end_time: int, repetitions: int, 
                 exercise: int, variant: int) -> None:
     """Command to add workout to SQL table
 
-    Args:
-        user_id: The user ID who did the workout.
-        start_time: The workout's start time in epoch
-        end_time: The workout's end time in epoch
-        repetitions: The number of repetitions in the set.
-        weight: The weight of the set in kilograms.
-        exercise: The exercise ID associated with the activity.
-        variant: The variant of the activity. Left hand, right hand, etc.
-
-    Returns:
-        Nothing.
+    :param user_id: The user ID who did the workout.
+    :param start_time: The workout's start time in epoch.
+    :param end_time: The workout's end time in epoch.
+    :param repetitions: The number of repetitions in the set.
+    :param weight: The weight of the set in kilograms.
+    :param exercise: The exercise ID associated with the activity.
+    :param variant: The variant of the activity. Left hand, right hand, etc.
+    :return: Nothing.
     """
+
     UserWorkoutData(
         user_id=user_id,
         start_time=start_time,
