@@ -50,6 +50,10 @@ with the required POST information.
 
     $ curl 0.0.0.0:80 -X POST -d "user_id=1" -d "start_time=5" -d "end_time=6" -d "repetitions=6" -d "weight=9" -d "exercise=4" -d "variant=99"
 
+Setup
+-----
+To avoid PyCharm from not properly locating certain includes, right click "src" and select Mark Directory as Sources Root.
+
 External Database Access
 ------------------------
 Access the database through external SQL database software using the following
