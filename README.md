@@ -38,12 +38,31 @@ virtual environment for developing on this project, then run the application.
 
 4. Start the Flask development server:
 
-        $ python src/application.py --port 8000
+        $ python src/application.py --port 80
 
-5. Open http://127.0.0.1:8000/ in a web browser to view the output of your
+5. Open http://127.0.0.1:80/ in a web browser to view the output of your
    service.
 
 Commands
 --------
-There are currently no commands for this commit.
+We test the POST functionality of this code by running the development server locally, and issuing a curl POST command
+with the required POST information.
 
+    $ curl 0.0.0.0:80 -X POST -d "user_id=1" -d "start_time=5" -d "end_time=6" -d "repetitions=6" -d "weight=9" -d "exercise=4" -d "variant=99"
+
+Setup
+-----
+To avoid PyCharm from not properly locating certain includes, right click "src" and select Mark Directory as Sources Root.
+
+External Database Access
+------------------------
+Access the database through external SQL database software using the following
+configurations:
+
+**Host:** increment.cx9kpie1sol8.us-west-1.rds.amazonaws.com
+
+**Username:** admin
+
+**Password:** L69VLKJTEwgJVBHNBt
+
+**Port:** 3306
