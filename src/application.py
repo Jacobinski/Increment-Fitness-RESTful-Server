@@ -22,7 +22,8 @@ parser.add_argument('skeleton_data', type=bytes, required=False, help="A binary 
 
 
 class Workout(Resource):
-    def post(self):
+    @staticmethod
+    def post():
         workout_info = parser.parse_args()
         try:
             add_workout(**workout_info)
@@ -31,13 +32,14 @@ class Workout(Resource):
             # User passed in an arg that was not the correct type for our database
             return {'status': 'Failed POST. ' + str(err)}, 400
 
-    def get(self):
+    @staticmethod
+    def get():
         return {'status': 'successful GET'}
 
 
 # Setup endpoints
-api.add_resource(Workout,'/', '/workouts')
+api.add_resource(Workout, '/', '/workouts')
 
 # Run the application
 if __name__ == '__main__':
-   flaskrun(app)
+    flaskrun(app)
