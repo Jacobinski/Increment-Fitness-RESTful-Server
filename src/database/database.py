@@ -1,5 +1,8 @@
 from pony.orm import *
 from typing import Iterable
+from constants import MIN_MONTH, MAX_MONTH, MIN_YEAR
+from datetime import datetime
+
 
 # Generate a database variable which represents our MySQL database.
 db = Database()
@@ -18,6 +21,13 @@ class UserWorkoutData(db.Entity):
     skeleton_data = Optional(bytes)
 
     PrimaryKey(user_id, start_time)
+
+
+class UserInformationData(db.Entity):
+    """Python representation of User Information Data Table
+    """
+    username = PrimaryKey(str)
+    user_id = Required(int, unique=True)
 
 
 @db_session
@@ -49,15 +59,75 @@ def add_workout(user_id: int, start_time: int, end_time: int, repetitions: int, 
 
 
 @db_session
-def get_workout(user_id: int) -> Iterable[UserWorkoutData]:
+def get_workout(username: str, month: int, year: int) -> Iterable[UserWorkoutData]:
     """Command to get a user's workout data from the SQL table.
 
-    :param user_id: The user ID whose data we will fetch.
+    :param username: The user whose data we will fetch.
+    :param month: The month of data to obtain in MM format.
+    :param year: The month of data to obtain in YYYY format.
     :return: An array of rows from the SQL table
     """
-    workouts = select(workout for workout in UserWorkoutData if workout.user_id == user_id)[:]
-    result = [w.to_dict() for w in workouts]
+    def _format_output(input):
+        input_dict = [i.to_dict() for i in input]
+        output = {}
+
+        '''
+            {
+		date: {hour, minute, second, day (1-31), month (0-11), year},
+		workout: [
+				{exerciseID: (0-10), reps: [], weights: [] },
+				{exerciseID: (0-10), reps: [], weights: [] }
+			]
+	},
+	    '''
+        for i in input_dict:
+            workout = {}
+            workout['exerciseID'] = i['exercise']
+            workout['reps'] = i['repetitions']
+            workout['weights'] = i['weight']
+
+            print(workout)
+        pass
+
+    if month < MIN_MONTH or month > MAX_MONTH or year < MIN_YEAR:
+        raise ValueError('Invalid date passed into workout query')
+
+    user_id = _get_user_id(username)
+    if user_id is None:
+        return None
+
+    month_start_epoch = datetime(month=month, year=year, day=1).timestamp()
+    if month == 12:
+        month_end_epoch = datetime(month=1, year=year+1, day=1).timestamp()
+    else:
+        month_end_epoch = datetime(month=month+1, year=year, day=1).timestamp()
+
+    workouts = select(workout for workout in UserWorkoutData
+                      if (workout.user_id == user_id
+                          and workout.start_time > month_start_epoch
+                          and workout.start_time < month_end_epoch)
+                      )[:]
+
+    _format_output(workouts)
+
+    # Ensure that query obtained results
+    if len(workouts) > 0:
+        result = [w.to_dict() for w in workouts]
+    else:
+        result = None
     return result
+
+
+@db_session
+def _get_user_id(username: str) -> int:
+    """ Command to convert a username to user id
+
+    :param username: The username of the account
+    :return: The integer user ID associated with the account
+    """
+    user_id = select(u.user_id for u in UserInformationData if u.username == username).first()
+
+    return user_id
 
 
 # Bind the database to the AWS RDS instance and create a mapping from classes to tables

@@ -53,7 +53,7 @@ with the required POST information. Note that there has to be a unique user_id &
 We test the GET functionality of this code by running the development server locally, and issuing a curl GET command
 with the required user_id.
 
-    curl 0.0.0.0:8000/workouts -X GET -d "user_id=90"
+    curl 0.0.0.0:8000/workouts -X GET -d "username=Jacobinski" -d "month=03" -d "year=2018"
 
 Setup
 -----

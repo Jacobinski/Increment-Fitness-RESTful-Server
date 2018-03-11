@@ -16,7 +16,9 @@ post_parser.add_argument('skeleton_data', type=bytes, required=False, help="A bi
 
 # Create a GET request parser for the workout API
 get_parser = reqparse.RequestParser(bundle_errors=True)
-get_parser.add_argument('user_id', type=int, required=True, help="The user ID whose data should be returned.")
+get_parser.add_argument('username', type=str, required=True, help="The username whose data should be returned.")
+get_parser.add_argument('month', type=int, required=True, help="The month of data to obtain in MM format.")
+get_parser.add_argument('year', type=int, required=True, help="The month of data to obtain in YYYY format.")
 
 
 class Workout(Resource):
@@ -51,7 +53,7 @@ class Workout(Resource):
     def get():
         # Parse the input args
         try:
-            user_id = get_parser.parse_args()
+            workout_query = get_parser.parse_args()
         except exceptions.BadRequest as err:
             return Response.client_error(
                 status=err.code,
@@ -61,7 +63,8 @@ class Workout(Resource):
 
         # Fetch workouts from database
         try:
-            data = get_workout(**user_id)
+
+            data = get_workout(**workout_query)
             return Response.success(
                 status=200,
                 message="Successful GET of page",
