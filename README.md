@@ -38,17 +38,22 @@ virtual environment for developing on this project, then run the application.
 
 4. Start the Flask development server:
 
-        $ python src/application.py --port 80
+        $ python src/application.py --port 8000
 
-5. Open http://127.0.0.1:80/ in a web browser to view the output of your
+5. Open http://127.0.0.1:8000/ in a web browser to view the output of your
    service.
 
 Commands
 --------
 We test the POST functionality of this code by running the development server locally, and issuing a curl POST command
-with the required POST information.
+with the required POST information. Note that there has to be a unique user_id & start_time pairing for each POST.
 
-    $ curl 0.0.0.0:80 -X POST -d "user_id=1" -d "start_time=5" -d "end_time=6" -d "repetitions=6" -d "weight=9" -d "exercise=4" -d "variant=99"
+    curl 0.0.0.0:8000/workouts -X POST -d "user_id=1" -d "start_time=5" -d "end_time=6" -d "repetitions=6" -d "weight=9" -d "exercise=4" -d "variant=99"
+
+We test the GET functionality of this code by running the development server locally, and issuing a curl GET command
+with the required user_id.
+
+    curl 0.0.0.0:8000/workouts -X GET -d "user_id=90"
 
 Setup
 -----

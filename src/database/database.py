@@ -1,4 +1,5 @@
 from pony.orm import *
+from typing import Iterable
 
 # Generate a database variable which represents our MySQL database.
 db = Database()
@@ -45,6 +46,18 @@ def add_workout(user_id: int, start_time: int, end_time: int, repetitions: int, 
         variant=variant,
         skeleton_data=skeleton_data
     )
+
+
+@db_session
+def get_workout(user_id: int) -> Iterable[UserWorkoutData]:
+    """Command to get a user's workout data from the SQL table.
+
+    :param user_id: The user ID whose data we will fetch.
+    :return: An array of rows from the SQL table
+    """
+    workouts = select(workout for workout in UserWorkoutData if workout.user_id == user_id)[:]
+    result = [w.to_dict() for w in workouts]
+    return result
 
 
 # Bind the database to the AWS RDS instance and create a mapping from classes to tables
