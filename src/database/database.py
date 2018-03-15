@@ -1,8 +1,9 @@
-from pony.orm import *
-from typing import Iterable
-from constants import MIN_MONTH, MAX_MONTH, MIN_YEAR
 from datetime import datetime
+from typing import Iterable
 
+from pony.orm import *
+
+from constants import MIN_MONTH, MAX_MONTH, MIN_YEAR, REST_INTERVAL
 
 # Generate a database variable which represents our MySQL database.
 db = Database()
@@ -67,27 +68,61 @@ def get_workout(username: str, month: int, year: int) -> Iterable[UserWorkoutDat
     :param year: The month of data to obtain in YYYY format.
     :return: An array of rows from the SQL table
     """
-    def _format_output(input):
-        input_dict = [i.to_dict() for i in input]
-        output = {}
 
-        '''
-            {
-		date: {hour, minute, second, day (1-31), month (0-11), year},
-		workout: [
-				{exerciseID: (0-10), reps: [], weights: [] },
-				{exerciseID: (0-10), reps: [], weights: [] }
-			]
-	},
-	    '''
-        for i in input_dict:
-            workout = {}
-            workout['exerciseID'] = i['exercise']
-            workout['reps'] = i['repetitions']
-            workout['weights'] = i['weight']
+    def _format_output(_workouts):
+        _workouts = [w.to_dict() for w in _workouts]
+        _workouts.sort(key=lambda w: w['start_time'])
+        output = []
 
-            print(workout)
-        pass
+        if len(_workouts) > 0:
+            first_workout = _workouts[0]
+            prev_exercise = first_workout['exercise']
+            prev_exercise_start = first_workout['start_time']
+            prev_set_end = first_workout['end_time']
+            exercise = {
+                'exerciseID': prev_exercise,
+                'reps': [first_workout['repetitions']],
+                'weights': [first_workout['weight']],
+                'startTimes': [first_workout['start_time']],
+                'endTimes': [first_workout['end_time']]
+            }
+
+            for ii in range(1, len(_workouts)):
+                current_workout = _workouts[ii]
+                current_set_start = current_workout['start_time']
+                if current_workout['exercise'] == prev_exercise:
+                    print("yea same exercise", current_workout['exercise'])
+                if current_set_start - prev_set_end < REST_INTERVAL:
+                    print("yeah in rest", current_set_start, prev_set_end)
+                if current_workout['exercise'] == prev_exercise and current_set_start - prev_set_end < REST_INTERVAL:
+                    exercise['reps'].append(current_workout['repetitions'])
+                    exercise['weights'].append(current_workout['weight'])
+                    exercise['startTimes'].append(current_set_start)
+                    exercise['endTimes'].append(current_workout['end_time'])
+                else:
+                    output.append({
+                        'date': prev_exercise_start,
+                        'exercises': exercise
+                    })
+                    prev_exercise_start = current_workout['start_time']
+
+                    exercise = {
+                        'exerciseID': current_workout['exercise'],
+                        'reps': [current_workout['repetitions']],
+                        'weights': [current_workout['weight']],
+                        'startTimes': [current_set_start],
+                        'endTimes': [current_workout['end_time']]
+                    }
+
+                prev_exercise = current_workout['exercise']
+                prev_set_end = current_workout['end_time']
+
+            output.append({
+                'date': prev_exercise_start,
+                'exercises': exercise
+            })
+
+        return output
 
     if month < MIN_MONTH or month > MAX_MONTH or year < MIN_YEAR:
         raise ValueError('Invalid date passed into workout query')
@@ -98,9 +133,9 @@ def get_workout(username: str, month: int, year: int) -> Iterable[UserWorkoutDat
 
     month_start_epoch = datetime(month=month, year=year, day=1).timestamp()
     if month == 12:
-        month_end_epoch = datetime(month=1, year=year+1, day=1).timestamp()
+        month_end_epoch = datetime(month=1, year=year + 1, day=1).timestamp()
     else:
-        month_end_epoch = datetime(month=month+1, year=year, day=1).timestamp()
+        month_end_epoch = datetime(month=month + 1, year=year, day=1).timestamp()
 
     workouts = select(workout for workout in UserWorkoutData
                       if (workout.user_id == user_id
@@ -108,11 +143,11 @@ def get_workout(username: str, month: int, year: int) -> Iterable[UserWorkoutDat
                           and workout.start_time < month_end_epoch)
                       )[:]
 
-    _format_output(workouts)
+    workouts = _format_output(workouts)
 
     # Ensure that query obtained results
     if len(workouts) > 0:
-        result = [w.to_dict() for w in workouts]
+        result = workouts
     else:
         result = None
     return result
