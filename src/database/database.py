@@ -90,10 +90,6 @@ def get_workout(username: str, month: int, year: int) -> Iterable[UserWorkoutDat
             for ii in range(1, len(_workouts)):
                 current_workout = _workouts[ii]
                 current_set_start = current_workout['start_time']
-                if current_workout['exercise'] == prev_exercise:
-                    print("yea same exercise", current_workout['exercise'])
-                if current_set_start - prev_set_end < REST_INTERVAL:
-                    print("yeah in rest", current_set_start, prev_set_end)
                 if current_workout['exercise'] == prev_exercise and current_set_start - prev_set_end < REST_INTERVAL:
                     exercise['reps'].append(current_workout['repetitions'])
                     exercise['weights'].append(current_workout['weight'])
