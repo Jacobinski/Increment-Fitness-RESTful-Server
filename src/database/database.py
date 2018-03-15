@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Iterable
 
 from pony.orm import *
 
@@ -32,18 +31,17 @@ class UserInformationData(db.Entity):
 
 
 @db_session
-def add_workout(user_id: int, start_time: int, end_time: int, repetitions: int, weight: int,
-                exercise: int, variant: int, skeleton_data: bytes = None) -> None:
+def add_workout(user_id, start_time, end_time, repetitions, weight, exercise, variant, skeleton_data=None):
     """Command to add workout to SQL table
 
-    :param user_id: The user ID who did the workout.
-    :param start_time: The workout's start time in epoch.
-    :param end_time: The workout's end time in epoch.
-    :param repetitions: The number of repetitions in the set.
-    :param weight: The weight of the set in kilograms.
-    :param exercise: The exercise ID associated with the activity.
-    :param variant: The variant of the activity. Left hand, right hand, etc.
-    :param skeleton_data: A binary file for the skeleton activity file.
+    :param user_id: (int) The user ID who did the workout.
+    :param start_time: (int) The workout's start time in epoch.
+    :param end_time: (int) The workout's end time in epoch.
+    :param repetitions: (int) The number of repetitions in the set.
+    :param weight: (int) The weight of the set in kilograms.
+    :param exercise: (int) The exercise ID associated with the activity.
+    :param variant: (int) The variant of the activity. Left hand, right hand, etc.
+    :param skeleton_data: (bytes) A binary file for the skeleton activity file.
     :return: Nothing.
     """
 
@@ -60,12 +58,12 @@ def add_workout(user_id: int, start_time: int, end_time: int, repetitions: int, 
 
 
 @db_session
-def get_workout(username: str, month: int, year: int) -> Iterable[UserWorkoutData]:
+def get_workout(username, month, year):
     """Command to get a user's workout data from the SQL table.
 
-    :param username: The user whose data we will fetch.
-    :param month: The month of data to obtain in MM format.
-    :param year: The month of data to obtain in YYYY format.
+    :param username: (str) The user whose data we will fetch.
+    :param month: (int) The month of data to obtain in MM format.
+    :param year: (int) The month of data to obtain in YYYY format.
     :return: An array of rows from the SQL table
     """
 
@@ -150,10 +148,10 @@ def get_workout(username: str, month: int, year: int) -> Iterable[UserWorkoutDat
 
 
 @db_session
-def _get_user_id(username: str) -> int:
+def _get_user_id(username):
     """ Command to convert a username to user id
 
-    :param username: The username of the account
+    :param username: (str) The username of the account
     :return: The integer user ID associated with the account
     """
     user_id = select(u.user_id for u in UserInformationData if u.username == username).first()
