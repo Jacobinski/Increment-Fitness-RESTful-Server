@@ -143,7 +143,7 @@ def get_workout(username: str, month: int, year: int) -> Iterable[UserWorkoutDat
 
     # Ensure that query obtained results
     if len(workouts) > 0:
-        result = workouts
+        result = {'username': username, 'data': workouts}
     else:
         result = None
     return result
