@@ -1,1 +1,1 @@
-from database.database import add_workout
+from database import add_workout, get_workout
