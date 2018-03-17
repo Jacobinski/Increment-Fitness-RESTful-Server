@@ -125,11 +125,12 @@ def get_workout(username, month, year):
     if user_id is None:
         return None
 
-    month_start_epoch = datetime(month=month, year=year, day=1).timestamp()
+    epoch = datetime(month=1, year=1970, day=1)
+    month_start_epoch = int((datetime(month=month, year=year, day=1) - epoch).total_seconds())
     if month == 12:
-        month_end_epoch = datetime(month=1, year=year + 1, day=1).timestamp()
+        month_end_epoch = int((datetime(month=1, year=year + 1, day=1) - epoch).total_seconds())
     else:
-        month_end_epoch = datetime(month=month + 1, year=year, day=1).timestamp()
+        month_end_epoch = int((datetime(month=month + 1, year=year, day=1) - epoch).total_seconds())
 
     workouts = select(workout for workout in UserWorkoutData
                       if (workout.user_id == user_id
