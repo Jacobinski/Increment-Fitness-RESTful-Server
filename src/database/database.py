@@ -16,8 +16,8 @@ class UserWorkoutData(db.Entity):
     end_time = Required(int, size=32)
     repetitions = Required(int, size=16)
     weight = Required(int, size=16)
-    exercise = Required(int, size=16)
-    variant = Required(int, size=8)
+    exercise = Required(str)
+    variant = Required(str)
     skeleton_data = Optional(bytes)
 
     PrimaryKey(user_id, start_time)
@@ -39,8 +39,8 @@ def add_workout(user_id, start_time, end_time, repetitions, weight, exercise, va
     :param end_time: (int) The workout's end time in epoch.
     :param repetitions: (int) The number of repetitions in the set.
     :param weight: (int) The weight of the set in kilograms.
-    :param exercise: (int) The exercise ID associated with the activity.
-    :param variant: (int) The variant of the activity. Left hand, right hand, etc.
+    :param exercise: (str) The string name of the activity.
+    :param variant: (str) The variant of the activity. Left hand, right hand, etc.
     :param skeleton_data: (bytes) A binary file for the skeleton activity file.
     :return: Nothing.
     """
@@ -78,7 +78,7 @@ def get_workout(username, month, year):
             prev_exercise_start = first_workout['start_time']
             prev_set_end = first_workout['end_time']
             exercise = {
-                'exerciseID': prev_exercise,
+                'exercise': prev_exercise,
                 'reps': [first_workout['repetitions']],
                 'weights': [first_workout['weight']],
                 'startTimes': [first_workout['start_time']],
@@ -101,7 +101,7 @@ def get_workout(username, month, year):
                     prev_exercise_start = current_workout['start_time']
 
                     exercise = {
-                        'exerciseID': current_workout['exercise'],
+                        'exercise': current_workout['exercise'],
                         'reps': [current_workout['repetitions']],
                         'weights': [current_workout['weight']],
                         'startTimes': [current_set_start],
