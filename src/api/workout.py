@@ -10,8 +10,8 @@ post_parser.add_argument('start_time', type=int, required=True, help="Datetime o
 post_parser.add_argument('end_time', type=int, required=True, help="Datetime of workout's end time")
 post_parser.add_argument('repetitions', type=int, required=True, help="The number of repetitions in the set.")
 post_parser.add_argument('weight', type=int, required=True, help="The weight of the set in kilograms.")
-post_parser.add_argument('exercise', type=int, required=True, help="The exercise ID associated with the activity.")
-post_parser.add_argument('variant', type=int, required=True, help="The variant of the activity. Left hand, right hand, etc.")
+post_parser.add_argument('exercise', type=str, required=True, help="The string name of the activity.")
+post_parser.add_argument('variant', type=str, required=True, help="The variant of the activity. Left hand, right hand, etc.")
 post_parser.add_argument('skeleton_data', type=bytes, required=False, help="A binary file for the skeleton activity file..")
 
 # Create a GET request parser for the workout API
