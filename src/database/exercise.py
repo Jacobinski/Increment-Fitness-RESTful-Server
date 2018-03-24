@@ -8,7 +8,7 @@ from constants import MIN_MONTH, MAX_MONTH, MIN_YEAR, REST_INTERVAL
 db = Database()
 
 
-class UserWorkoutData(db.Entity):
+class UserExerciseData(db.Entity):
     """Python representation of User Workout Data Table
     """
     user_id = Required(int)
@@ -31,8 +31,8 @@ class UserInformationData(db.Entity):
 
 
 @db_session
-def add_workout(user_id, start_time, end_time, repetitions, weight, exercise, variant, skeleton_data=b'0'):
-    """Command to add workout to SQL table
+def add_exercise(user_id, start_time, end_time, repetitions, weight, exercise, variant, skeleton_data=b'0'):
+    """Command to add exercise to SQL table
 
     :param user_id: (int) The user ID who did the workout.
     :param start_time: (int) The workout's start time in epoch.
@@ -45,7 +45,7 @@ def add_workout(user_id, start_time, end_time, repetitions, weight, exercise, va
     :return: Nothing.
     """
 
-    UserWorkoutData(
+    UserExerciseData(
         user_id=user_id,
         start_time=start_time,
         end_time=end_time,
@@ -58,8 +58,8 @@ def add_workout(user_id, start_time, end_time, repetitions, weight, exercise, va
 
 
 @db_session
-def get_workout(username, month, year):
-    """Command to get a user's workout data from the SQL table.
+def get_exercise(username, month, year):
+    """Command to get a user's exercise data from the SQL table.
 
     :param username: (str) The user whose data we will fetch.
     :param month: (int) The month of data to obtain in MM format.
@@ -132,17 +132,17 @@ def get_workout(username, month, year):
     else:
         month_end_epoch = int((datetime(month=month + 1, year=year, day=1) - epoch).total_seconds())
 
-    workouts = select(workout for workout in UserWorkoutData
-                      if (workout.user_id == user_id
-                          and workout.start_time > month_start_epoch
-                          and workout.start_time < month_end_epoch)
+    exercises = select(exercise for exercise in UserExerciseData
+                      if (exercise.user_id == user_id
+                          and exercise.start_time > month_start_epoch
+                          and exercise.start_time < month_end_epoch)
                       )[:]
 
-    workouts = _format_output(workouts)
+    exercises = _format_output(exercises)
 
     # Ensure that query obtained results
-    if len(workouts) > 0:
-        result = {'username': username, 'data': workouts}
+    if len(exercises) > 0:
+        result = {'username': username, 'data': exercises}
     else:
         result = None
     return result

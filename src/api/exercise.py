@@ -1,14 +1,14 @@
 from flask_restful import Resource, reqparse
-from database import add_workout, get_workout
+from database import add_exercise, get_exercise
 from werkzeug import exceptions
 from werkzeug.datastructures import FileStorage
 from api.response import Response
 
-# Create a POST request parser for the workout API
+# Create a POST request parser for the exercise API
 post_parser = reqparse.RequestParser(bundle_errors=True)
-post_parser.add_argument('user_id', type=int, required=True, help="The user ID who did the workout.")
-post_parser.add_argument('start_time', type=int, required=True, help="Datetime of workout's start time.")
-post_parser.add_argument('end_time', type=int, required=True, help="Datetime of workout's end time")
+post_parser.add_argument('user_id', type=int, required=True, help="The user ID who did the exercise.")
+post_parser.add_argument('start_time', type=int, required=True, help="Datetime of exercise's start time.")
+post_parser.add_argument('end_time', type=int, required=True, help="Datetime of exercise's end time")
 post_parser.add_argument('repetitions', type=int, required=True, help="The number of repetitions in the set.")
 post_parser.add_argument('weight', type=int, required=True, help="The weight of the set in kilograms.")
 post_parser.add_argument('exercise', type=str, required=True, help="The string name of the activity.")
@@ -16,19 +16,19 @@ post_parser.add_argument('variant', type=str, required=True, help="The variant o
 post_parser.add_argument('skeleton_data', type=FileStorage, required=True, location='files',
                          help="A binary file for the skeleton activity file.")
 
-# Create a GET request parser for the workout API
+# Create a GET request parser for the exercise API
 get_parser = reqparse.RequestParser(bundle_errors=True)
 get_parser.add_argument('username', type=str, required=True, help="The username whose data should be returned.")
 get_parser.add_argument('month', type=int, required=True, help="The month of data to obtain in MM format.")
 get_parser.add_argument('year', type=int, required=True, help="The month of data to obtain in YYYY format.")
 
 
-class Workout(Resource):
+class Exercise(Resource):
     @staticmethod
     def post():
         # Parse the input args
         try:
-            workout_info = post_parser.parse_args()
+            exercise_info = post_parser.parse_args()
         except exceptions.BadRequest as err:
             return Response.client_error(
                 status=err.code,
@@ -38,7 +38,7 @@ class Workout(Resource):
 
         # Use the input args
         try:
-            add_workout(**workout_info)
+            add_exercise(**exercise_info)
             return Response.success(
                 status=200,                             # TODO: Extract status from add_workout
                 message="Successful POST to workout table",
@@ -55,7 +55,7 @@ class Workout(Resource):
     def get():
         # Parse the input args
         try:
-            workout_query = get_parser.parse_args()
+            exercise_query = get_parser.parse_args()
         except exceptions.BadRequest as err:
             return Response.client_error(
                 status=err.code,
@@ -65,7 +65,7 @@ class Workout(Resource):
 
         # Fetch workouts from database
         try:
-            data = get_workout(**workout_query)
+            data = get_exercise(**exercise_query)
             return Response.success(
                 status=200,
                 message="Successful GET of page",

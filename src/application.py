@@ -11,7 +11,7 @@ api = Api(app)
 CORS(app)
 
 # Setup endpoints
-api.add_resource(Workout, '/api/workouts')
+api.add_resource(Workout, '/api/exercises')
 api.add_resource(Leaderboards, '/api/leaderboards')
 
 # Run the application
