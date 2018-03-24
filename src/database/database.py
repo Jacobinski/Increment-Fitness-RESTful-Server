@@ -18,7 +18,7 @@ class UserWorkoutData(db.Entity):
     weight = Required(int, size=16)
     exercise = Required(str)
     variant = Required(str)
-    skeleton_data = Optional(bytes)
+    skeleton_data = Optional(buffer)
 
     PrimaryKey(user_id, start_time)
 
@@ -31,7 +31,7 @@ class UserInformationData(db.Entity):
 
 
 @db_session
-def add_workout(user_id, start_time, end_time, repetitions, weight, exercise, variant, skeleton_data=None):
+def add_workout(user_id, start_time, end_time, repetitions, weight, exercise, variant, skeleton_data=b'0'):
     """Command to add workout to SQL table
 
     :param user_id: (int) The user ID who did the workout.
@@ -53,7 +53,7 @@ def add_workout(user_id, start_time, end_time, repetitions, weight, exercise, va
         weight=weight,
         exercise=exercise,
         variant=variant,
-        skeleton_data=skeleton_data
+        skeleton_data=skeleton_data.read()
     )
 
 
