@@ -48,7 +48,7 @@ Commands
 We test the POST functionality of this code by running the development server locally, and issuing a curl POST command
 with the required POST information. Note that there has to be a unique user_id & start_time pairing for each POST.
 
-    curl 0.0.0.0:8000/api/workouts -X POST -d "user_id=1" -d "start_time=5" -d "end_time=6" -d "repetitions=6" -d "weight=9" -d "exercise=4" -d "variant=99"
+    curl -v 0.0.0.0:8000/api/workouts -X POST -F "user_id=8" -F "start_time=5" -F "end_time=6" -F "repetitions=6" -F "weight=9" -F "exercise=Squat" -F "variant=None" -F "skeleton_data=@test_image.jpg"
 
 We test the GET functionality of this code by running the development server locally, and issuing a curl GET command
 with the required user_id.

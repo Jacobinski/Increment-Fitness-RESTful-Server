@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 from database import add_workout, get_workout
 from werkzeug import exceptions
+from werkzeug.datastructures import FileStorage
 from api.response import Response
 
 # Create a POST request parser for the workout API
@@ -12,7 +13,8 @@ post_parser.add_argument('repetitions', type=int, required=True, help="The numbe
 post_parser.add_argument('weight', type=int, required=True, help="The weight of the set in kilograms.")
 post_parser.add_argument('exercise', type=str, required=True, help="The string name of the activity.")
 post_parser.add_argument('variant', type=str, required=True, help="The variant of the activity. Left hand, right hand, etc.")
-post_parser.add_argument('skeleton_data', type=bytes, required=False, help="A binary file for the skeleton activity file..")
+post_parser.add_argument('skeleton_data', type=FileStorage, required=True, location='files',
+                         help="A binary file for the skeleton activity file.")
 
 # Create a GET request parser for the workout API
 get_parser = reqparse.RequestParser(bundle_errors=True)
@@ -30,7 +32,7 @@ class Workout(Resource):
         except exceptions.BadRequest as err:
             return Response.client_error(
                 status=err.code,
-                message=err.description,
+                message="Error: Missing " + str(err.data['message']),
                 data=None
             )
 
@@ -42,11 +44,11 @@ class Workout(Resource):
                 message="Successful POST to workout table",
                 data=None
             )
-        except TypeError as err:
-            # User passed in an arg that was not the correct type for our database
-            return Response.server_error(
-                status=400,                             # TODO: Create proper status for server error
-                message="Server Error: {}".format(err),
+        except Exception as err:
+            return Response.client_error(
+                status=400,
+                message="Error: Database post error " + str(err.message),
+                data=None
             )
 
     @staticmethod
@@ -57,13 +59,12 @@ class Workout(Resource):
         except exceptions.BadRequest as err:
             return Response.client_error(
                 status=err.code,
-                message=err.description,
+                message="Error: Missing " + str(err.data['message']),
                 data=None
             )
 
         # Fetch workouts from database
         try:
-
             data = get_workout(**workout_query)
             return Response.success(
                 status=200,

@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, make_response
 
 
 class Response:
@@ -11,9 +11,13 @@ class Response:
         :param data: Data sent to the client.
         :return: A JSON object containing the params.
         """
-        return jsonify(status=status,
-                       message=message,
-                       data=data)
+        return make_response(
+            jsonify(
+                status=status,
+                message=message,
+                data=data),
+            status
+        )
 
     @classmethod
     def client_error(cls, status, message, data):
@@ -24,9 +28,13 @@ class Response:
         :param data: Echo the request that caused the error.
         :return: A JSON object containing the params.
         """
-        return jsonify(status=status,
-                       message=message,
-                       data=data)
+        return make_response(
+            jsonify(
+                status=status,
+                message=message,
+                data=data),
+            status
+        )
 
     @classmethod
     def server_error(cls, status, message):
@@ -36,5 +44,9 @@ class Response:
         :param message: Error message explaining server error.
         :return: A JSON object containing the params.
         """
-        return jsonify(status=status,
-                       message=message)
+        return make_response(
+            jsonify(
+                status=status,
+                message=message),
+            status
+        )
