@@ -53,7 +53,11 @@ with the required POST information. Note that there has to be a unique user_id &
 We test the GET functionality of this code by running the development server locally, and issuing a curl GET command
 with the required user_id.
 
-    curl 0.0.0.0:8000/api/workouts -X GET -d "username=Jacobinski" -d "month=03" -d "year=2018"
+    $ curl 0.0.0.0:8000/api/workouts -X GET -d "username=Jacobinski" -d "month=03" -d "year=2018"
+
+We test the GET functionality of the get leaderboards api endpoint by running the following command.
+    
+    $ curl 0.0.0.0:8000/api/leaderboards 
 
 Setup
 -----
