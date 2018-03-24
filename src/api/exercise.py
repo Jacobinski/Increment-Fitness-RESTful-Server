@@ -2,6 +2,7 @@ from flask_restful import Resource, reqparse
 from database import add_exercise, get_exercise
 from werkzeug import exceptions
 from werkzeug.datastructures import FileStorage
+from werkzeug.exceptions import HTTPException
 from api.response import Response
 
 # Create a POST request parser for the exercise API
@@ -29,7 +30,7 @@ class Exercise(Resource):
         # Parse the input args
         try:
             exercise_info = post_parser.parse_args()
-        except exceptions.BadRequest as err:
+        except HTTPException as err:
             return Response.client_error(
                 status=err.code,
                 message="Error: Missing " + str(err.data['message']),

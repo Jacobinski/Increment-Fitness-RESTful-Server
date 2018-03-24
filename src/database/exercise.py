@@ -12,6 +12,7 @@ class UserExerciseData(db.Entity):
     """Python representation of User Workout Data Table
     """
     user_id = Required(int)
+    workout_id = Required(int, size=32)
     start_time = Required(int, size=32)
     end_time = Required(int, size=32)
     repetitions = Required(int, size=16)
@@ -23,11 +24,12 @@ class UserExerciseData(db.Entity):
     PrimaryKey(user_id, start_time)
 
 
-class UserInformationData(db.Entity):
+class UserInfoData(db.Entity):
     """Python representation of User Information Data Table
     """
     username = PrimaryKey(str)
     user_id = Required(int, unique=True)
+    current_workout_id = Required(int, unique=True)
 
 
 @db_session
@@ -44,17 +46,22 @@ def add_exercise(user_id, start_time, end_time, repetitions, weight, exercise, v
     :param skeleton_data: (bytes) A binary file for the skeleton activity file.
     :return: Nothing.
     """
+    workout_id = _get_workout_id(user_id)
 
-    UserExerciseData(
-        user_id=user_id,
-        start_time=start_time,
-        end_time=end_time,
-        repetitions=repetitions,
-        weight=weight,
-        exercise=exercise,
-        variant=variant,
-        skeleton_data=skeleton_data.read()
-    )
+    if workout_id is None:
+        raise ValueError('Invalid user_id passed with query')
+    else:
+        UserExerciseData(
+            user_id=user_id,
+            workout_id=workout_id,
+            start_time=start_time,
+            end_time=end_time,
+            repetitions=repetitions,
+            weight=weight,
+            exercise=exercise,
+            variant=variant,
+            skeleton_data=skeleton_data.read()
+        )
 
 
 @db_session
@@ -167,7 +174,7 @@ def _get_user_id(username):
     :param username: (str) The username of the account
     :return: The integer user ID associated with the account
     """
-    user_id = select(u.user_id for u in UserInformationData if u.username == username).first()
+    user_id = select(u.user_id for u in UserInfoData if u.username == username).first()
 
     return user_id
 
@@ -179,9 +186,21 @@ def _get_username(user_id):
     :param user_id: The integer user ID associated with the account
     :return: (str) The username of the account
     """
-    username = select(u.username for u in UserInformationData if u.user_id == user_id).first()
+    username = select(u.username for u in UserInfoData if u.user_id == user_id).first()
 
     return username
+
+
+@db_session
+def _get_workout_id(username):
+    """ Command to convert a username to workout_id
+
+    :param username: (str) The username of the account
+    :return: The integer workout ID associated with the account
+    """
+    workout_id = select(u.current_workout_id for u in UserInfoData if u.username == username).first()
+
+    return workout_id
 
 
 # Bind the database to the AWS RDS instance and create a mapping from classes to tables
