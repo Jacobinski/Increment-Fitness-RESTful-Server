@@ -149,6 +149,17 @@ def get_workout(username, month, year):
 
 
 @db_session
+def get_leaderboards():
+    """
+    Command to get total reps done by each user.
+    :return: An array of rows from the SQL table
+    """
+    leaderboards = select((workout.user_id, sum(workout.repetitions)) for workout in UserWorkoutData)
+
+    return [{'username': _get_username(l[0]), 'reps': l[1]} for l in leaderboards]
+
+
+@db_session
 def _get_user_id(username):
     """ Command to convert a username to user id
 
@@ -158,6 +169,18 @@ def _get_user_id(username):
     user_id = select(u.user_id for u in UserInformationData if u.username == username).first()
 
     return user_id
+
+
+@db_session
+def _get_username(user_id):
+    """
+    Command to convert user id to username
+    :param user_id: The integer user ID associated with the account
+    :return: (str) The username of the account
+    """
+    username = select(u.username for u in UserInformationData if u.user_id == user_id).first()
+
+    return username
 
 
 # Bind the database to the AWS RDS instance and create a mapping from classes to tables
