@@ -35,11 +35,11 @@ class Workout(Resource):
             )
         # Use the input args
         try:
-            add_workout(**workout_info)
+            data = add_workout(**workout_info)
             return Response.success(
                 status=200,                             # TODO: Extract status from add_workout
                 message="Successful POST to workout table",
-                data=None
+                data=data
             )
         except Exception as err:
             return Response.client_error(
@@ -79,7 +79,7 @@ class Workout(Resource):
     def patch():
         # Parse the input args
         try:
-            workout_patch = get_parser.parse_args()
+            workout_patch = patch_parser.parse_args()
         except exceptions.BadRequest as err:
             return Response.client_error(
                 status=err.code,
@@ -91,7 +91,7 @@ class Workout(Resource):
             update_workout(**workout_patch)
             return Response.success(
                 status=200,
-                message="Successful GET of page",
+                message="Successful PATCH of page",
                 data=None
             )
 
