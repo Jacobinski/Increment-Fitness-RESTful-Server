@@ -42,7 +42,7 @@ class Exercise(Resource):
             add_exercise(**exercise_info)
             return Response.success(
                 status=200,                             # TODO: Extract status from add_workout
-                message="Successful POST to workout table",
+                message="Successful POST to exercise table",
                 data=None
             )
         except Exception as err:
