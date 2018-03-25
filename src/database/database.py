@@ -154,9 +154,10 @@ def get_leaderboards():
     Command to get total reps done by each user.
     :return: An array of rows from the SQL table
     """
-    leaderboards = select((workout.user_id, sum(workout.repetitions)) for workout in UserWorkoutData)
+    leaderboards = select(
+        (workout.user_id, sum(workout.repetitions), sum(workout.weight)) for workout in UserWorkoutData)
 
-    return [{'username': _get_username(l[0]), 'reps': l[1]} for l in leaderboards]
+    return [{'username': _get_username(l[0]), 'reps': l[1], 'weights': l[2]} for l in leaderboards]
 
 
 @db_session
