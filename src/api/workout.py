@@ -24,7 +24,6 @@ patch_parser.add_argument('date', type=int, required=True, help="Epoch time of t
 class Workout(Resource):
     @staticmethod
     def post():
-        # Parse the input args
         try:
             workout_info = post_parser.parse_args()
         except HTTPException as err:
@@ -33,7 +32,7 @@ class Workout(Resource):
                 message="Error: Missing " + str(err.data['message']),
                 data=None
             )
-        # Use the input args
+
         try:
             data = add_workout(**workout_info)
             return Response.success(
@@ -50,7 +49,6 @@ class Workout(Resource):
 
     @staticmethod
     def get():
-        # Parse the input args
         try:
             workout_query = get_parser.parse_args()
         except exceptions.BadRequest as err:
@@ -60,7 +58,6 @@ class Workout(Resource):
                 data=None
             )
 
-        # Fetch workouts from database
         try:
             data = get_workout(**workout_query)
             return Response.success(
@@ -68,7 +65,6 @@ class Workout(Resource):
                 message="Successful GET of page",
                 data=data
             )
-
         except Exception as err:
             return Response.server_error(
                 status=400,                             # TODO: Create proper status for server error
@@ -77,7 +73,6 @@ class Workout(Resource):
 
     @staticmethod
     def patch():
-        # Parse the input args
         try:
             workout_patch = patch_parser.parse_args()
         except exceptions.BadRequest as err:
@@ -86,7 +81,7 @@ class Workout(Resource):
                 message="Error: Missing " + str(err.data['message']),
                 data=None
             )
-        # Update workouts from database
+
         try:
             update_workout(**workout_patch)
             return Response.success(

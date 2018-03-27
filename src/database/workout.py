@@ -59,10 +59,17 @@ def get_workout(workout_id):
     :param workout_id: (int) The unique ID of the workout.
     :return: An array of rows from the SQL table
     """
-    def _format_output(data):
+    def _format_output(exercise_data, workout_data):
         output = {}
-        exercises = [d.to_dict() for d in data]
-        for e in exercises:
+        exercise_data = [d.to_dict() for d in exercise_data]
+        workout_data = workout_data.to_dict()
+
+        # Format workout information
+        output['title'] = workout_data['title']
+        output['date'] = workout_data['date']
+
+        # Format exercise information
+        for e in exercise_data:
             name = e['exercise']
 
             # Append information to existing exercise entry if available
@@ -84,7 +91,8 @@ def get_workout(workout_id):
 
     # Obtain and sort exercises
     exercise = select(e for e in UserExerciseData if e.workout_id == workout_id)[:]
-    exercise = _format_output(exercise)
+    workout = UserWorkoutData.get(workout_id=workout_id)
+    exercise = _format_output(exercise, workout)
 
     return exercise
 
