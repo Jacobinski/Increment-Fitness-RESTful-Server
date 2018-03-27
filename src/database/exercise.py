@@ -46,7 +46,7 @@ def add_exercise(user_id, start_time, end_time, repetitions, weight, exercise, v
     :param skeleton_data: (bytes) A binary file for the skeleton activity file.
     :return: Nothing.
     """
-    workout_id = _get_workout_id(user_id)
+    workout_id = _get_workout_id(_get_username(user_id))
 
     if workout_id is None:
         raise ValueError('This user does not appear to exist. Failed to add exercise')
