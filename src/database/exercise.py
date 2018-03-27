@@ -162,7 +162,7 @@ def get_leaderboards():
     :return: An array of rows from the SQL table
     """
     leaderboards = select(
-        (workout.user_id, sum(workout.repetitions), sum(workout.weight)) for workout in UserWorkoutData)
+        (workout.user_id, sum(workout.repetitions), sum(workout.weight)) for workout in UserExerciseData)
 
     return [{'username': _get_username(l[0]), 'reps': l[1], 'weights': l[2]} for l in leaderboards]
 
