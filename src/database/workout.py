@@ -1,11 +1,11 @@
 from pony.orm import *
-from exercise import UserInformationData1, UserExerciseData1
+from exercise import UserInformationData, UserExerciseData
 
 # Generate a database variable which represents our MySQL database.
 db = Database()
 
 
-class UserWorkoutData1(db.Entity):
+class UserWorkoutData(db.Entity):
     """Python representation of User Workout Data Table
     """
     workout_id = PrimaryKey(int, size=32)
@@ -24,8 +24,8 @@ def add_workout(user_id, title, date):
     :return: workout_id: (int) The unique ID of the workout.
     """
     # Add a new entry to the UserWorkoutData table
-    max_workout_id = select(max(u.workout_id) for u in UserWorkoutData1 if user_id == u.user_id).first()
-    UserWorkoutData1(
+    max_workout_id = select(max(u.workout_id) for u in UserWorkoutData if user_id == u.user_id).first()
+    UserWorkoutData(
         workout_id=max_workout_id+1,
         user_id=user_id,
         title=title,
@@ -33,7 +33,7 @@ def add_workout(user_id, title, date):
     )
 
     # Update the UserInfoTable to reflect this new information
-    user = UserInformationData1.get(user_id=user_id)
+    user = UserInformationData.get(user_id=user_id)
     user.set(current_workout_id=max_workout_id+1)
 
     return max_workout_id+1
@@ -48,13 +48,13 @@ def update_workout(workout_id, title, date):
     :param date: (int) The epoch time associated with the end of the workout.
     :return: None
     """
-    workout = UserWorkoutData1.get(workout_id=workout_id)
+    workout = UserWorkoutData.get(workout_id=workout_id)
     workout.set(title=title, date=date)
 
 
 @db_session
 def get_workout(workout_id):
-    """Command to update a workout in the SQL table
+    """Command to get a workout from the SQL table
 
     :param workout_id: (int) The unique ID of the workout.
     :return: An array of rows from the SQL table
@@ -83,7 +83,7 @@ def get_workout(workout_id):
         return output
 
     # Obtain and sort exercises
-    exercise = select(e for e in UserExerciseData1 if e.workout_id == workout_id)[:]
+    exercise = select(e for e in UserExerciseData if e.workout_id == workout_id)[:]
     exercise = _format_output(exercise)
 
     return exercise

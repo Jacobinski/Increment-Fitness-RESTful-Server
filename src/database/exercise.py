@@ -8,7 +8,7 @@ from constants import MIN_MONTH, MAX_MONTH, MIN_YEAR, REST_INTERVAL
 db = Database()
 
 
-class UserExerciseData1(db.Entity):
+class UserExerciseData(db.Entity):
     """Python representation of User Exercise Data Table
     """
     user_id = Required(int)
@@ -24,7 +24,7 @@ class UserExerciseData1(db.Entity):
     PrimaryKey(user_id, start_time)
 
 
-class UserInformationData1(db.Entity):
+class UserInformationData(db.Entity):
     """Python representation of User Information Data Table
     """
     username = PrimaryKey(str)
@@ -51,7 +51,7 @@ def add_exercise(user_id, start_time, end_time, repetitions, weight, exercise, v
     if workout_id is None:
         raise ValueError('This user does not appear to exist. Failed to add exercise')
     else:
-        UserExerciseData1(
+        UserExerciseData(
             user_id=user_id,
             workout_id=workout_id,
             start_time=start_time,
@@ -139,7 +139,7 @@ def get_exercise(username, month, year):
     else:
         month_end_epoch = int((datetime(month=month + 1, year=year, day=1) - epoch).total_seconds())
 
-    exercises = select(exercise for exercise in UserExerciseData1
+    exercises = select(exercise for exercise in UserExerciseData
                        if (exercise.user_id == user_id
                           and exercise.start_time > month_start_epoch
                           and exercise.start_time < month_end_epoch)
@@ -157,8 +157,8 @@ def get_exercise(username, month, year):
 
 @db_session
 def get_leaderboards():
-    """
-    Command to get total reps done by each user.
+    """Command to get total reps done by each user.
+
     :return: An array of rows from the SQL table
     """
     leaderboards = select(
@@ -174,7 +174,7 @@ def _get_user_id(username):
     :param username: (str) The username of the account
     :return: The integer user ID associated with the account
     """
-    user_id = select(u.user_id for u in UserInformationData1 if u.username == username).first()
+    user_id = select(u.user_id for u in UserInformationData if u.username == username).first()
 
     return user_id
 
@@ -186,7 +186,7 @@ def _get_username(user_id):
     :param user_id: The integer user ID associated with the account
     :return: (str) The username of the account
     """
-    username = select(u.username for u in UserInformationData1 if u.user_id == user_id).first()
+    username = select(u.username for u in UserInformationData if u.user_id == user_id).first()
 
     return username
 
@@ -198,7 +198,7 @@ def _get_workout_id(username):
     :param username: (str) The username of the account
     :return: The integer workout ID associated with the account
     """
-    workout_id = select(u.current_workout_id for u in UserInformationData1 if u.username == username).first()
+    workout_id = select(u.current_workout_id for u in UserInformationData if u.username == username).first()
 
     return workout_id
 
