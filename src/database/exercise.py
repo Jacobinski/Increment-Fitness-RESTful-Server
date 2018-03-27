@@ -8,10 +8,11 @@ from constants import MIN_MONTH, MAX_MONTH, MIN_YEAR, REST_INTERVAL
 db = Database()
 
 
-class UserWorkoutData(db.Entity):
-    """Python representation of User Workout Data Table
+class UserExerciseData(db.Entity):
+    """Python representation of User Exercise Data Table
     """
     user_id = Required(int)
+    workout_id = Required(int, size=32)
     start_time = Required(int, size=32)
     end_time = Required(int, size=32)
     repetitions = Required(int, size=16)
@@ -28,11 +29,12 @@ class UserInformationData(db.Entity):
     """
     username = PrimaryKey(str)
     user_id = Required(int, unique=True)
+    current_workout_id = Required(int, unique=True)
 
 
 @db_session
-def add_workout(user_id, start_time, end_time, repetitions, weight, exercise, variant, skeleton_data=b'0'):
-    """Command to add workout to SQL table
+def add_exercise(user_id, start_time, end_time, repetitions, weight, exercise, variant, skeleton_data=b'0'):
+    """Command to add exercise to SQL table
 
     :param user_id: (int) The user ID who did the workout.
     :param start_time: (int) The workout's start time in epoch.
@@ -44,22 +46,27 @@ def add_workout(user_id, start_time, end_time, repetitions, weight, exercise, va
     :param skeleton_data: (bytes) A binary file for the skeleton activity file.
     :return: Nothing.
     """
+    workout_id = _get_workout_id(user_id)
 
-    UserWorkoutData(
-        user_id=user_id,
-        start_time=start_time,
-        end_time=end_time,
-        repetitions=repetitions,
-        weight=weight,
-        exercise=exercise,
-        variant=variant,
-        skeleton_data=skeleton_data.read()
-    )
+    if workout_id is None:
+        raise ValueError('This user does not appear to exist. Failed to add exercise')
+    else:
+        UserExerciseData(
+            user_id=user_id,
+            workout_id=workout_id,
+            start_time=start_time,
+            end_time=end_time,
+            repetitions=repetitions,
+            weight=weight,
+            exercise=exercise,
+            variant=variant,
+            skeleton_data=skeleton_data.read()
+        )
 
 
 @db_session
-def get_workout(username, month, year):
-    """Command to get a user's workout data from the SQL table.
+def get_exercise(username, month, year):
+    """Command to get a user's exercise data from the SQL table.
 
     :param username: (str) The user whose data we will fetch.
     :param month: (int) The month of data to obtain in MM format.
@@ -132,17 +139,17 @@ def get_workout(username, month, year):
     else:
         month_end_epoch = int((datetime(month=month + 1, year=year, day=1) - epoch).total_seconds())
 
-    workouts = select(workout for workout in UserWorkoutData
-                      if (workout.user_id == user_id
-                          and workout.start_time > month_start_epoch
-                          and workout.start_time < month_end_epoch)
+    exercises = select(exercise for exercise in UserExerciseData
+                       if (exercise.user_id == user_id
+                          and exercise.start_time > month_start_epoch
+                          and exercise.start_time < month_end_epoch)
                       )[:]
 
-    workouts = _format_output(workouts)
+    exercises = _format_output(exercises)
 
     # Ensure that query obtained results
-    if len(workouts) > 0:
-        result = {'username': username, 'data': workouts}
+    if len(exercises) > 0:
+        result = {'username': username, 'data': exercises}
     else:
         result = None
     return result
@@ -150,8 +157,8 @@ def get_workout(username, month, year):
 
 @db_session
 def get_leaderboards():
-    """
-    Command to get total reps done by each user.
+    """Command to get total reps done by each user.
+
     :return: An array of rows from the SQL table
     """
     leaderboards = select(
@@ -182,6 +189,18 @@ def _get_username(user_id):
     username = select(u.username for u in UserInformationData if u.user_id == user_id).first()
 
     return username
+
+
+@db_session
+def _get_workout_id(username):
+    """ Command to convert a username to workout_id
+
+    :param username: (str) The username of the account
+    :return: The integer workout ID associated with the account
+    """
+    workout_id = select(u.current_workout_id for u in UserInformationData if u.username == username).first()
+
+    return workout_id
 
 
 # Bind the database to the AWS RDS instance and create a mapping from classes to tables

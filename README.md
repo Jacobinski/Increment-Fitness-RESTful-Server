@@ -45,19 +45,35 @@ virtual environment for developing on this project, then run the application.
 
 Commands
 --------
-We test the POST functionality of this code by running the development server locally, and issuing a curl POST command
-with the required POST information. Note that there has to be a unique user_id & start_time pairing for each POST.
+To test any of the functionality of this code, we can run the development server locally, and issue curl commands to GET, POST, PATCH, etc.
 
-    curl -v 0.0.0.0:8000/api/workouts -X POST -F "user_id=8" -F "start_time=5" -F "end_time=6" -F "repetitions=6" -F "weight=9" -F "exercise=Squat" -F "variant=None" -F "skeleton_data=@test_image.jpg"
+## Exercise
+POST
 
-We test the GET functionality of this code by running the development server locally, and issuing a curl GET command
-with the required user_id.
+    $ curl -v 0.0.0.0:8000/api/exercises -X POST -F "user_id=8" -F "start_time=5" -F "end_time=6" -F "repetitions=6" -F "weight=9" -F "exercise=Squat" -F "variant=None" -F "skeleton_data=@test_image.jpg"
 
-    $ curl 0.0.0.0:8000/api/workouts -X GET -d "username=Jacobinski" -d "month=03" -d "year=2018"
+GET
 
-We test the GET functionality of the get leaderboards api endpoint by running the following command.
-    
-    $ curl 0.0.0.0:8000/api/leaderboards 
+    $ curl -v 0.0.0.0:8000/api/exercises -X GET -d "username=Jacobinski" -d "month=03" -d "year=2018"
+
+## Leaderboard
+GET
+
+    $ curl -v 0.0.0.0:8000/api/leaderboards
+
+## Workout
+POST
+
+    $ curl -v 0.0.0.0:8000/api/workouts -X POST -d "date=12345678" -d "user_id=1" -d "title=Awesome Workout"
+
+GET
+
+    $ curl -v 0.0.0.0:8000/api/workouts -X GET -d "workout_id=1"
+
+PATCH
+
+    $ curl -v 0.0.0.0:8000/api/workouts -X PATCH -d "date=111111" -d "workout_id=1" -d "title=Alright Workout"
+
 
 Setup
 -----
