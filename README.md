@@ -233,6 +233,26 @@ This command will get the number of reps and weights that each user has lifted.
 
     $ curl -v 0.0.0.0:8000/api/workouts -X PATCH -d "date=111111" -d "workout_id=1" -d "title=Alright Workout"
 
+## User
+
+#### GET
+
+    $ curl -v 0.0.0.0:8000/api/user -X GET -d "username=Baratheon"
+
+* Sample Output:
+
+        {
+          "data": {
+            "Workouts": [
+              0,
+              4
+            ]
+          },
+          "message": "Successful GET of page",
+          "status": 200
+        }
+
+
 
 Setup
 -----

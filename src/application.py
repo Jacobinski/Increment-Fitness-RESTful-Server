@@ -14,7 +14,7 @@ CORS(app)
 api.add_resource(Exercise, '/api/exercises')
 api.add_resource(Workout, '/api/workouts')
 api.add_resource(Leaderboards, '/api/leaderboards')
-api.add_resource(User, '/api/users')
+api.add_resource(User, '/api/user')
 
 # Run the application
 if __name__ == '__main__':

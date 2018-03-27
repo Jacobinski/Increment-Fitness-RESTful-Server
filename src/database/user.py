@@ -18,7 +18,10 @@ def get_user_workouts(username):
     user_id = _get_user_id(username)
     workouts = select(w.workout_id for w in UserWorkoutData if w.user_id == user_id)[:]
 
-    return workouts
+    # Format output
+    output = {'Workouts': workouts}
+
+    return output
 
 
 # Bind the database to the AWS RDS instance and create a mapping from classes to tables
