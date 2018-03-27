@@ -27,7 +27,6 @@ get_parser.add_argument('year', type=int, required=True, help="The month of data
 class Exercise(Resource):
     @staticmethod
     def post():
-        # Parse the input args
         try:
             exercise_info = post_parser.parse_args()
         except HTTPException as err:
@@ -37,7 +36,6 @@ class Exercise(Resource):
                 data=None
             )
 
-        # Use the input args
         try:
             add_exercise(**exercise_info)
             return Response.success(
@@ -54,7 +52,6 @@ class Exercise(Resource):
 
     @staticmethod
     def get():
-        # Parse the input args
         try:
             exercise_query = get_parser.parse_args()
         except exceptions.BadRequest as err:
@@ -64,7 +61,6 @@ class Exercise(Resource):
                 data=None
             )
 
-        # Fetch workouts from database
         try:
             data = get_exercise(**exercise_query)
             return Response.success(
@@ -72,7 +68,6 @@ class Exercise(Resource):
                 message="Successful GET of page",
                 data=data
             )
-
         except Exception as err:
             return Response.server_error(
                 status=400,                             # TODO: Create proper status for server error
