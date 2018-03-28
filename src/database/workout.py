@@ -34,10 +34,12 @@ def update_workout(workout_id, title, date):
     :param workout_id: (int) The unique ID of the workout.
     :param title: (str) The name of the workout.
     :param date: (int) The epoch time associated with the end of the workout.
-    :return: None
+    :return: The updated workout json.
     """
     workout = UserWorkoutData.get(workout_id=workout_id)
     workout.set(title=title, date=date)
+
+    return workout.to_dict()
 
 
 @db_session
