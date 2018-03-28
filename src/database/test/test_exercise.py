@@ -27,7 +27,7 @@ def test_get_exercise():
                           'weights': [0],
                           'exercise': u'Squat'}}]
                }
-    output = get_exercise('Tester', 03, 2018)
+    output = get_exercise(username='Tester', month=03, year=2018)
     print(output)
     assert(output == correct)
 
@@ -69,7 +69,7 @@ def test_add_exercise():
                           exercise="Sit ups",
                           variant="None",
                           skeleton_data=StringIO.StringIO([01010101]))
-    output_2 = get_exercise('Tester', 03, 2018)
+    output_2 = get_exercise(username='Tester', month=03, year=2018)
 
     assert(output_1 == correct_1)
     assert(output_2 == correct_2)
