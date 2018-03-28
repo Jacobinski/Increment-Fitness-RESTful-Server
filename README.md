@@ -46,6 +46,9 @@ virtual environment for developing on this project, then run the application.
 Testing
 -------
 To test any of the functionality of this code, we can run the development server locally, and issue curl commands to GET, POST, PATCH, etc.
+Alternatively, we could run the Python unit testing framework with a clean dev database
+
+        $ Pytest
 
 API - Exercise
 --------------
