@@ -1,5 +1,6 @@
 Increment Database Repository
 =============================
+[![Build Status](https://travis-ci.com/Jacobinski/inc-dbs.svg?token=NEDcUSneGHwPvWA1oiYU&branch=master)](https://travis-ci.com/Jacobinski/inc-dbs)
 
 What's Here
 -----------
