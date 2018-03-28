@@ -2,6 +2,7 @@ from database import *
 
 # NOTE: The database should have been initialized in test_exercise
 
+
 def test_get_workout():
     correct = {'date': 1522208304,
                u'Squat':
