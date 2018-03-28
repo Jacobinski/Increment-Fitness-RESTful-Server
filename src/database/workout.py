@@ -12,7 +12,7 @@ def add_workout(user_id, title, date):
     :return: workout_id: (int) The unique ID of the workout.
     """
     # Add a new entry to the UserWorkoutData table
-    max_workout_id = select(max(u.workout_id) for u in UserWorkoutData if user_id == u.user_id).first()
+    max_workout_id = select(max(u.workout_id) for u in UserWorkoutData).first()
     UserWorkoutData(
         workout_id=max_workout_id+1,
         user_id=user_id,
@@ -24,7 +24,7 @@ def add_workout(user_id, title, date):
     user = UserInformationData.get(user_id=user_id)
     user.set(current_workout_id=max_workout_id+1)
 
-    return max_workout_id+1
+    return {'New_workout_id': max_workout_id+1}
 
 
 @db_session

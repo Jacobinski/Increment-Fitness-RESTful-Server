@@ -31,3 +31,13 @@ def test_update_workout():
     output = update_workout(workout_id=0, title="My Last Workout", date=1522208555)
 
     assert(output == correct)
+
+
+def test_add_workout():
+    correct1 = {'New_workout_id': 2}
+    correct2 = {'date': 1522208765, 'title': u'Boring Workout Title'}
+    output1 = add_workout(user_id=0, title="Boring Workout Title", date=1522208765)
+    output2 = get_workout(workout_id=output1['New_workout_id'])
+
+    assert(output1 == correct1)
+    assert(output2 == correct2)
