@@ -1,17 +1,5 @@
 from pony.orm import *
-from exercise import UserInformationData, UserExerciseData
-
-# Generate a database variable which represents our MySQL database.
-db = Database()
-
-
-class UserWorkoutData(db.Entity):
-    """Python representation of User Workout Data Table
-    """
-    workout_id = PrimaryKey(int, size=32)
-    user_id = Required(int)
-    title = Required(str)
-    date = Required(int, size=32)
+from tables import UserInformationData, UserExerciseData, UserWorkoutData
 
 
 @db_session
@@ -95,15 +83,3 @@ def get_workout(workout_id):
     exercise = _format_output(exercise, workout)
 
     return exercise
-
-
-# Bind the database to the AWS RDS instance and create a mapping from classes to tables
-# TODO: Remove the hardcoded values. This isn't good software practice, but fixing it requires setting up AWS Parameter
-#       Store on each developer's machine and the cloud, which is going to be a ton of work.
-db.bind(
-    provider='mysql',
-    host='increment.cx9kpie1sol8.us-west-1.rds.amazonaws.com',
-    user='admin',
-    passwd='L69VLKJTEwgJVBHNBt',
-    db='increment_db')
-db.generate_mapping(create_tables=True)

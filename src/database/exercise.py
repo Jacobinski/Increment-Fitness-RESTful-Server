@@ -1,36 +1,8 @@
 from datetime import datetime
-
 from pony.orm import *
-
 from constants import MIN_MONTH, MAX_MONTH, MIN_YEAR, REST_INTERVAL
 from base64 import encodestring
-
-# Generate a database variable which represents our MySQL database.
-db = Database()
-
-
-class UserExerciseData(db.Entity):
-    """Python representation of User Exercise Data Table
-    """
-    user_id = Required(int)
-    workout_id = Required(int, size=32)
-    start_time = Required(int, size=32)
-    end_time = Required(int, size=32)
-    repetitions = Required(int, size=16)
-    weight = Required(int, size=16)
-    exercise = Required(str)
-    variant = Required(str)
-    skeleton_data = Optional(buffer)
-
-    PrimaryKey(user_id, start_time)
-
-
-class UserInformationData(db.Entity):
-    """Python representation of User Information Data Table
-    """
-    username = PrimaryKey(str)
-    user_id = Required(int, unique=True)
-    current_workout_id = Required(int, unique=True)
+from tables import UserExerciseData, UserInformationData
 
 
 @db_session
@@ -204,15 +176,3 @@ def _get_workout_id(username):
     workout_id = select(u.current_workout_id for u in UserInformationData if u.username == username).first()
 
     return workout_id
-
-
-# Bind the database to the AWS RDS instance and create a mapping from classes to tables
-# TODO: Remove the hardcoded values. This isn't good software practice, but fixing it requires setting up AWS Parameter
-#       Store on each developer's machine and the cloud, which is going to be a ton of work.
-db.bind(
-    provider='mysql',
-    host='increment.cx9kpie1sol8.us-west-1.rds.amazonaws.com',
-    user='admin',
-    passwd='L69VLKJTEwgJVBHNBt',
-    db='increment_db')
-db.generate_mapping(create_tables=True)
