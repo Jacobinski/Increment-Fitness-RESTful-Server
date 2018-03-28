@@ -3,6 +3,7 @@ from datetime import datetime
 from pony.orm import *
 
 from constants import MIN_MONTH, MAX_MONTH, MIN_YEAR, REST_INTERVAL
+from base64 import encodestring
 
 # Generate a database variable which represents our MySQL database.
 db = Database()
@@ -89,7 +90,8 @@ def get_exercise(username, month, year):
                 'reps': [first_workout['repetitions']],
                 'weights': [first_workout['weight']],
                 'startTimes': [first_workout['start_time']],
-                'endTimes': [first_workout['end_time']]
+                'endTimes': [first_workout['end_time']],
+                'picture': encodestring(first_workout['skeleton_data'])
             }
 
             for ii in range(1, len(_workouts)):
@@ -112,7 +114,8 @@ def get_exercise(username, month, year):
                         'reps': [current_workout['repetitions']],
                         'weights': [current_workout['weight']],
                         'startTimes': [current_set_start],
-                        'endTimes': [current_workout['end_time']]
+                        'endTimes': [current_workout['end_time']],
+                        'picture': encodestring(current_workout['skeleton_data'])
                     }
 
                 prev_exercise = current_workout['exercise']
