@@ -1,9 +1,13 @@
 from database import *
+import pytest
 
-# NOTE: The database should have been initialized in test_exercise
+
+@pytest.fixture(scope="module")
+def setup():
+    clean_dev_database()
 
 
-def test_get_user_workouts():
+def test_get_user_workouts(setup):
     correct1 = {'Workouts': [0]}
     correct2 = {'Workouts': [1]}
     output1 = get_user_workouts(username='Tester')

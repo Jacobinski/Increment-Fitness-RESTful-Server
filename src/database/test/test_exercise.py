@@ -1,17 +1,22 @@
 from database import *
 import StringIO
+import pytest
 
-# Initialize developer database for unit testing
-# Note: This should be a clean version of the database
+
+# Initialize the developer database
 init_development_db()
 
+@pytest.fixture(scope="module")
+def setup():
+    clean_dev_database()
 
-def test_get_exercise():
+
+def test_get_exercise(setup):
     correct = {'username': 'Tester',
                'data':
                    [{'date': 1522208307,
                      'exercises':
-                         {'picture': 'MAAwADEAMQAwADAAMQAxAA==\n',
+                         {'picture': 'MDAxMTAwMTE=\n',
                           'startTimes': [1522208307, 1522208308],
                           'reps': [5, 10],
                           'endTimes': [1522208367, 1522208367],
@@ -20,7 +25,7 @@ def test_get_exercise():
                      },
                     {'date': 1522208309,
                      'exercises':
-                         {'picture': 'MAAwADEAMQAwADAAMQAxAA==\n',
+                         {'picture': 'MDAxMTAwMTE=\n',
                           'startTimes': [1522208309],
                           'reps': [5],
                           'endTimes': [1522208367],
@@ -32,13 +37,13 @@ def test_get_exercise():
     assert(output == correct)
 
 
-def test_add_exercise():
+def test_add_exercise(setup):
     correct_1 = None
     correct_2 = {'username': 'Tester',
                  'data':
                      [{'date': 1522208307,
                        'exercises':
-                           {'picture': 'MAAwADEAMQAwADAAMQAxAA==\n',
+                           {'picture': 'MDAxMTAwMTE=\n',
                             'startTimes': [1522208307, 1522208308],
                             'reps': [5, 10],
                             'endTimes': [1522208367, 1522208367],
@@ -46,7 +51,7 @@ def test_add_exercise():
                             'exercise': u'Deadlift'}},
                       {'date': 1522208309,
                        'exercises':
-                           {'picture': 'MAAwADEAMQAwADAAMQAxAA==\n',
+                           {'picture': 'MDAxMTAwMTE=\n',
                             'startTimes': [1522208309],
                             'reps': [5],
                             'endTimes': [1522208367],
@@ -75,7 +80,7 @@ def test_add_exercise():
     assert(output_2 == correct_2)
 
 
-def test_get_leaderboards():
+def test_get_leaderboards(setup):
     correct = [{'username': u'Tester', 'weights': 18, 'reps': 23},
                {'username': u'Jacob', 'weights': 35, 'reps': 25}]
     output = get_leaderboards()

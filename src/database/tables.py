@@ -1,8 +1,10 @@
 from pony.orm import *
+import StringIO
 
 
 # The database variable to be used across DBS.
 DATABASE = Database()
+_is_dev_database = False
 
 
 class UserExerciseData(DATABASE.Entity):
@@ -59,8 +61,41 @@ def init_development_db():
 
     :return: None
     """
+    global _is_dev_database
     DATABASE.bind(
         provider='sqlite',
         filename='dev-database.sqlite',
         create_db=True)
     DATABASE.generate_mapping(create_tables=True)
+    _is_dev_database = True
+
+
+def clean_dev_database():
+    """ Wipe and refresh the developer database
+
+    :return: Nothing
+    """
+    global _is_dev_database
+    if _is_dev_database:
+        # Wipe the database. Only do this for the development database
+        DATABASE.drop_all_tables(with_all_data=True)
+        DATABASE.create_tables()
+
+        # Populate the database
+        with db_session:
+            UserInformationData(username="Tester", user_id=0, current_workout_id=0)
+            UserInformationData(username="Jacob", user_id=1, current_workout_id=1)
+
+            UserWorkoutData(workout_id=0, user_id=0, title="My First Workout", date=1522208304)
+            UserWorkoutData(workout_id=1, user_id=1, title="Jacob's Workout", date=1522208324)
+
+            UserExerciseData(user_id=0, workout_id=0, start_time=1522208307, end_time=1522208367, repetitions=5,
+                             weight=5, exercise="Deadlift", variant="None", skeleton_data=buffer('00110011'))
+            UserExerciseData(user_id=0, workout_id=0, start_time=1522208308, end_time=1522208367, repetitions=10,
+                             weight=10, exercise="Deadlift", variant="None", skeleton_data=buffer('00110011'))
+            UserExerciseData(user_id=0, workout_id=0, start_time=1522208309, end_time=1522208367, repetitions=5,
+                             weight=0, exercise="Squat", variant="None", skeleton_data=buffer('00110011'))
+            UserExerciseData(user_id=1, workout_id=1, start_time=1522208304, end_time=1522208404, repetitions=25,
+                             weight=35, exercise="Squat", variant="None", skeleton_data=buffer('01010101'))
+    else:
+        raise Exception
