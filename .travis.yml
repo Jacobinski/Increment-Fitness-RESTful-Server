@@ -1,0 +1,10 @@
+# Travis CI script
+language: python
+python:
+  - "2.7"
+cache: pip
+install:
+  - pip install -r requirements.txt
+script: py.test -v
+os:
+  - osx
