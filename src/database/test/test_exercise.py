@@ -73,3 +73,11 @@ def test_add_exercise():
 
     assert(output_1 == correct_1)
     assert(output_2 == correct_2)
+
+
+def test_get_leaderboards():
+    correct = [{'username': u'Tester', 'weights': 18, 'reps': 23},
+               {'username': u'Jacob', 'weights': 35, 'reps': 25}]
+    output = get_leaderboards()
+
+    assert(output == correct)
