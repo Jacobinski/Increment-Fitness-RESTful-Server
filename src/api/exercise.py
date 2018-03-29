@@ -4,6 +4,7 @@ from werkzeug import exceptions
 from werkzeug.datastructures import FileStorage
 from werkzeug.exceptions import HTTPException
 from api.response import Response
+from notification import send_data_notification
 
 # Create a POST request parser for the exercise API
 post_parser = reqparse.RequestParser(bundle_errors=True)
@@ -38,6 +39,10 @@ class Exercise(Resource):
 
         try:
             add_exercise(**exercise_info)
+
+            # Notify socket listeners
+            send_data_notification("New exercise added to database.")
+
             return Response.success(
                 status=200,                             # TODO: Extract status from add_workout
                 message="Successful POST to exercise table",
