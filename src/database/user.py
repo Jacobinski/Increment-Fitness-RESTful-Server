@@ -1,6 +1,6 @@
 from pony.orm import *
 from exercise import _get_user_id
-from tables import UserWorkoutData
+from tables import UserWorkoutData, UserInformationData
 
 
 @db_session
@@ -18,3 +18,17 @@ def get_user_workouts(username):
     output = {'Workouts': workouts}
 
     return output
+
+
+@db_session
+def get_users():
+    """Command to get all users in database
+
+    :return: All users in database
+    """
+    users = select(u for u in UserInformationData)[:]
+
+    # Format output
+    users = [u.to_dict() for u in users]
+
+    return users
