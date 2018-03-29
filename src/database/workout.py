@@ -1,5 +1,6 @@
 from pony.orm import *
 from tables import UserInformationData, UserExerciseData, UserWorkoutData
+from exercise import _get_workout_id, _get_username
 
 
 @db_session
@@ -11,20 +12,25 @@ def add_workout(user_id, title, date):
     :param date: (int) The epoch time associated with the end of the workout.
     :return: workout_id: (int) The unique ID of the workout.
     """
-    # Add a new entry to the UserWorkoutData table
-    max_workout_id = select(max(u.workout_id) for u in UserWorkoutData).first()
-    UserWorkoutData(
-        workout_id=max_workout_id+1,
-        user_id=user_id,
-        title=title,
-        date=date
-    )
+    workout_id = _get_workout_id(_get_username(user_id))
 
-    # Update the UserInfoTable to reflect this new information
-    user = UserInformationData.get(user_id=user_id)
-    user.set(current_workout_id=max_workout_id+1)
+    if workout_id is None:
+        raise ValueError('This user does not appear to exist. Failed to add workout.')
+    else:
+        # Add a new entry to the UserWorkoutData table
+        max_workout_id = select(max(u.workout_id) for u in UserWorkoutData).first()
+        UserWorkoutData(
+            workout_id=max_workout_id+1,
+            user_id=user_id,
+            title=title,
+            date=date
+        )
 
-    return {'New_workout_id': max_workout_id+1}
+        # Update the UserInfoTable to reflect this new information
+        user = UserInformationData.get(user_id=user_id)
+        user.set(current_workout_id=max_workout_id+1)
+
+        return {'New_workout_id': max_workout_id+1}
 
 
 @db_session

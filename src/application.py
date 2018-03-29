@@ -2,7 +2,7 @@
 from flask import Flask
 from flaskrun import flaskrun
 from flask_restful import Api
-from api import Exercise, Workout, Leaderboards, User
+from api import Exercise, Workout, Leaderboards, User, Users
 from flask_cors import CORS
 
 # Setup the application and RESTful API code
@@ -15,6 +15,7 @@ api.add_resource(Exercise, '/api/exercises')
 api.add_resource(Workout, '/api/workouts')
 api.add_resource(Leaderboards, '/api/leaderboards')
 api.add_resource(User, '/api/user')
+api.add_resource(Users, '/api/users')
 
 # Run the application
 if __name__ == '__main__':
