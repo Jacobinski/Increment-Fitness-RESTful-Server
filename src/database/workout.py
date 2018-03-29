@@ -1,17 +1,5 @@
 from pony.orm import *
-from exercise import UserInformationData, UserExerciseData
-
-# Generate a database variable which represents our MySQL database.
-db = Database()
-
-
-class UserWorkoutData(db.Entity):
-    """Python representation of User Workout Data Table
-    """
-    workout_id = PrimaryKey(int, size=32)
-    user_id = Required(int)
-    title = Required(str)
-    date = Required(int, size=32)
+from tables import UserInformationData, UserExerciseData, UserWorkoutData
 
 
 @db_session
@@ -24,7 +12,7 @@ def add_workout(user_id, title, date):
     :return: workout_id: (int) The unique ID of the workout.
     """
     # Add a new entry to the UserWorkoutData table
-    max_workout_id = select(max(u.workout_id) for u in UserWorkoutData if user_id == u.user_id).first()
+    max_workout_id = select(max(u.workout_id) for u in UserWorkoutData).first()
     UserWorkoutData(
         workout_id=max_workout_id+1,
         user_id=user_id,
@@ -36,7 +24,7 @@ def add_workout(user_id, title, date):
     user = UserInformationData.get(user_id=user_id)
     user.set(current_workout_id=max_workout_id+1)
 
-    return max_workout_id+1
+    return {'New_workout_id': max_workout_id+1}
 
 
 @db_session
@@ -46,10 +34,12 @@ def update_workout(workout_id, title, date):
     :param workout_id: (int) The unique ID of the workout.
     :param title: (str) The name of the workout.
     :param date: (int) The epoch time associated with the end of the workout.
-    :return: None
+    :return: The updated workout json.
     """
     workout = UserWorkoutData.get(workout_id=workout_id)
     workout.set(title=title, date=date)
+
+    return workout.to_dict()
 
 
 @db_session
@@ -95,15 +85,3 @@ def get_workout(workout_id):
     exercise = _format_output(exercise, workout)
 
     return exercise
-
-
-# Bind the database to the AWS RDS instance and create a mapping from classes to tables
-# TODO: Remove the hardcoded values. This isn't good software practice, but fixing it requires setting up AWS Parameter
-#       Store on each developer's machine and the cloud, which is going to be a ton of work.
-db.bind(
-    provider='mysql',
-    host='increment.cx9kpie1sol8.us-west-1.rds.amazonaws.com',
-    user='admin',
-    passwd='L69VLKJTEwgJVBHNBt',
-    db='increment_db')
-db.generate_mapping(create_tables=True)

@@ -1,6 +1,5 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 from database import get_leaderboards
-from werkzeug import exceptions
 from api.response import Response
 
 

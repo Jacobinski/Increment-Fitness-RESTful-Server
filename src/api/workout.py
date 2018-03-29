@@ -83,11 +83,11 @@ class Workout(Resource):
             )
 
         try:
-            update_workout(**workout_patch)
+            data = update_workout(**workout_patch)
             return Response.success(
                 status=200,
                 message="Successful PATCH of page",
-                data=None
+                data=data
             )
 
         except Exception as err:

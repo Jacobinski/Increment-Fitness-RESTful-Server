@@ -1,5 +1,6 @@
 Increment Database Repository
 =============================
+[![Build Status](https://travis-ci.com/Jacobinski/inc-dbs.svg?token=NEDcUSneGHwPvWA1oiYU&branch=master)](https://travis-ci.com/Jacobinski/inc-dbs)
 
 What's Here
 -----------
@@ -38,14 +39,23 @@ virtual environment for developing on this project, then run the application.
 
 4. Start the Flask development server:
 
-        $ python src/application.py --port 8000
+        $ python src/application.py --port 8000 --debug
 
 5. Open http://127.0.0.1:8000/ in a web browser to view the output of your
    service.
 
+Production
+----------
+To run the production Flask server, run the application with no args
+
+        $ python src/application.py
+
 Testing
 -------
 To test any of the functionality of this code, we can run the development server locally, and issue curl commands to GET, POST, PATCH, etc.
+Alternatively, we could run the Python unit testing framework with a clean dev database
+
+        $ Pytest
 
 API - Exercise
 --------------

@@ -1,4 +1,5 @@
 import optparse
+from database import init_production_db, init_development_db
 
 
 def flaskrun(app, default_host="0.0.0.0", default_port="80"):
@@ -23,6 +24,15 @@ def flaskrun(app, default_host="0.0.0.0", default_port="80"):
 
     options, _ = parser.parse_args()
 
+    # Setup the database
+    if options.debug:
+        print("Development Database Initialized")
+        init_development_db()
+    else:
+        print("Production Database Initialized")
+        init_production_db()
+
+    # Run the application
     app.run(
         debug=options.debug,
         host=options.host,

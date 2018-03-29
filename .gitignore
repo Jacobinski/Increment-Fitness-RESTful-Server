@@ -3,6 +3,8 @@
 
 # Custom
 .idea
+*.DS_Store
+*.sqlite
 
 # User-specific stuff:
 .idea/**/workspace.xml
