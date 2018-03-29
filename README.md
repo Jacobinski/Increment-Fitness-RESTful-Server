@@ -356,7 +356,7 @@ This command will get all workout ids associated with a username.
 
 API - Users
 -----------
-This endpoint is located at **/api/usersg/**
+This endpoint is located at **/api/users/**
 
 #### GET
 
