@@ -6,7 +6,7 @@ from tables import UserExerciseData, UserInformationData
 
 
 @db_session
-def add_exercise(user_id, start_time, end_time, repetitions, weight, exercise, variant, skeleton_data=b'0'):
+def add_exercise(user_id, start_time, end_time, repetitions, weight, exercise, variant, skeleton_data=''):
     """Command to add exercise to SQL table
 
     :param user_id: (int) The user ID who did the workout.
@@ -16,7 +16,7 @@ def add_exercise(user_id, start_time, end_time, repetitions, weight, exercise, v
     :param weight: (int) The weight of the set in kilograms.
     :param exercise: (str) The string name of the activity.
     :param variant: (str) The variant of the activity. Left hand, right hand, etc.
-    :param skeleton_data: (bytes) A binary file for the skeleton activity file.
+    :param skeleton_data: (bytes) An optional binary file for the skeleton activity file.
     :return: Nothing.
     """
     workout_id = _get_workout_id(_get_username(user_id))
@@ -24,6 +24,10 @@ def add_exercise(user_id, start_time, end_time, repetitions, weight, exercise, v
     if workout_id is None:
         raise ValueError('This user does not appear to exist. Failed to add exercise')
     else:
+        # Read the skeleton data file if it was added to the query
+        if skeleton_data:
+            skeleton_data = skeleton_data.read()
+
         UserExerciseData(
             user_id=user_id,
             workout_id=workout_id,
@@ -33,7 +37,7 @@ def add_exercise(user_id, start_time, end_time, repetitions, weight, exercise, v
             weight=weight,
             exercise=exercise,
             variant=variant,
-            skeleton_data=skeleton_data.read()
+            skeleton_data=skeleton_data
         )
 
 
@@ -57,13 +61,18 @@ def get_exercise(username, month, year):
             prev_exercise = first_workout['exercise']
             prev_exercise_start = first_workout['start_time']
             prev_set_end = first_workout['end_time']
+            if first_workout['skeleton_data']:
+                picture = encodestring(first_workout['skeleton_data'])
+            else:
+                picture = None
+
             exercise = {
                 'exercise': prev_exercise,
                 'reps': [first_workout['repetitions']],
                 'weights': [first_workout['weight']],
                 'startTimes': [first_workout['start_time']],
                 'endTimes': [first_workout['end_time']],
-                'picture': encodestring(first_workout['skeleton_data'])
+                'picture': picture
             }
 
             for ii in range(1, len(_workouts)):
@@ -80,6 +89,10 @@ def get_exercise(username, month, year):
                         'exercises': exercise
                     })
                     prev_exercise_start = current_workout['start_time']
+                    if current_workout['skeleton_data']:
+                        picture = encodestring(current_workout['skeleton_data'])
+                    else:
+                        picture = None
 
                     exercise = {
                         'exercise': current_workout['exercise'],
@@ -87,7 +100,7 @@ def get_exercise(username, month, year):
                         'weights': [current_workout['weight']],
                         'startTimes': [current_set_start],
                         'endTimes': [current_workout['end_time']],
-                        'picture': encodestring(current_workout['skeleton_data'])
+                        'picture': picture
                     }
 
                 prev_exercise = current_workout['exercise']
