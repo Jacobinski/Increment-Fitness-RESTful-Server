@@ -2,7 +2,6 @@ from flask_socketio import *
 
 # Define global SOCKET_IO variable
 SOCKET_IO = None
-_initialized = False
 
 
 def init(socketio):
