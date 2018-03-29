@@ -83,19 +83,31 @@ def clean_dev_database():
 
         # Populate the database
         with db_session:
-            UserInformationData(username="Tester", user_id=0, current_workout_id=0)
-            UserInformationData(username="Jacob", user_id=1, current_workout_id=1)
+            UserInformationData(username="Baratheon", user_id=0, current_workout_id=0)
+            UserInformationData(username="Targaryen", user_id=11111115, current_workout_id=1)
+            UserInformationData(username="Stark", user_id=22222220, current_workout_id=2)
+            UserInformationData(username="Lannister", user_id=33333335, current_workout_id=3)
+            UserInformationData(username="Greyjoy", user_id=44444440, current_workout_id=4)
 
-            UserWorkoutData(workout_id=0, user_id=0, title="My First Workout", date=1522208304)
-            UserWorkoutData(workout_id=1, user_id=1, title="Jacob's Workout", date=1522208324)
+            UserWorkoutData(workout_id=0, user_id=0, title="Baratheon Workout", date=1522208304)
+            UserWorkoutData(workout_id=1, user_id=11111115, title="Targaryen Workout", date=1522208325)
+            UserWorkoutData(workout_id=2, user_id=22222220, title="Stark Workout", date=1522208326)
+            UserWorkoutData(workout_id=3, user_id=33333335, title="Lannister Workout", date=1522208327)
+            UserWorkoutData(workout_id=4, user_id=44444440, title="Greyjoy Workout", date=1522208328)
 
             UserExerciseData(user_id=0, workout_id=0, start_time=1522208307, end_time=1522208367, repetitions=5,
-                             weight=5, exercise="Deadlift", variant="None", skeleton_data=buffer('00110011'))
+                             weight=5, exercise="Deadlift", variant="None", skeleton_data=None)
             UserExerciseData(user_id=0, workout_id=0, start_time=1522208308, end_time=1522208367, repetitions=10,
-                             weight=10, exercise="Deadlift", variant="None", skeleton_data=buffer('00110011'))
+                             weight=10, exercise="Deadlift", variant="None", skeleton_data=None)
             UserExerciseData(user_id=0, workout_id=0, start_time=1522208309, end_time=1522208367, repetitions=5,
-                             weight=0, exercise="Squat", variant="None", skeleton_data=buffer('00110011'))
-            UserExerciseData(user_id=1, workout_id=1, start_time=1522208304, end_time=1522208404, repetitions=25,
-                             weight=35, exercise="Squat", variant="None", skeleton_data=buffer('01010101'))
+                             weight=0, exercise="Squat", variant="None", skeleton_data=None)
+            UserExerciseData(user_id=11111115, workout_id=1, start_time=1522208304, end_time=1522208404, repetitions=25,
+                             weight=35, exercise="Squat", variant="None", skeleton_data=None)
+            UserExerciseData(user_id=22222220, workout_id=2, start_time=1522208304, end_time=1522208404, repetitions=15,
+                             weight=25, exercise="Squat", variant="None", skeleton_data=None)
+            UserExerciseData(user_id=33333335, workout_id=3, start_time=1522208304, end_time=1522208404, repetitions=10,
+                             weight=35, exercise="Squat", variant="None", skeleton_data=None)
+            UserExerciseData(user_id=44444440, workout_id=4, start_time=1522208304, end_time=1522208404, repetitions=5,
+                             weight=45, exercise="Squat", variant="None", skeleton_data=None)
     else:
         raise Exception
