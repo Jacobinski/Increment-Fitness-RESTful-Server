@@ -15,6 +15,8 @@ This sample includes:
 * scripts/ - this directory contains scripts used by AWS CodeDeploy when
   installing and deploying your application on the Amazon EC2 instance
 * src/ - this directory contains the Python source code for the Flask app
+* crypto/ - this directory contains the security certificates for HTTPS
+
 
 
 Getting Started
