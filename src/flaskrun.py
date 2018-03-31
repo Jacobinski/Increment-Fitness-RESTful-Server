@@ -2,7 +2,7 @@ import optparse
 from database import init_production_db, init_development_db
 
 
-def flaskrun(app, default_host="0.0.0.0", default_port="80"):
+def flaskrun(app, socketio, default_host="0.0.0.0", default_port="80"):
     """
     Takes a flask.Flask instance and runs it. Parses
     command-line flags to configure the app.
@@ -33,7 +33,8 @@ def flaskrun(app, default_host="0.0.0.0", default_port="80"):
         init_production_db()
 
     # Run the application
-    app.run(
+    socketio.run(
+        app=app,
         debug=options.debug,
         host=options.host,
         port=int(options.port)

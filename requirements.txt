@@ -2,10 +2,14 @@ aniso8601==2.0.0
 attrs==17.4.0
 certifi==2017.11.5
 click==6.7
+enum34==1.1.6
+eventlet==0.22.1
 Flask==0.12.2
 Flask-Cors==3.0.3
 Flask-RESTful==0.3.6
+Flask-SocketIO==2.9.6
 funcsigs==1.0.2
+greenlet==0.4.13
 itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
@@ -15,6 +19,8 @@ pony==0.7.3
 py==1.5.3
 PyMySQL==0.8.0
 pytest==3.5.0
+python-engineio==2.0.4
+python-socketio==1.9.0
 pytz==2018.3
 six==1.11.0
 Werkzeug==0.14.1
