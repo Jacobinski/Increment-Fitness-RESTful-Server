@@ -26,4 +26,4 @@ def send_data_notification(message):
     global SOCKET_IO
     assert SOCKET_IO, "The notification system has not been initialized."
 
-    SOCKET_IO.send(message)
+    SOCKET_IO.emit(message)

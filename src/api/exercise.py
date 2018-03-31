@@ -41,7 +41,7 @@ class Exercise(Resource):
             add_exercise(**exercise_info)
 
             # Notify socket listeners
-            send_data_notification("New exercise added to database.")
+            send_data_notification("update")
 
             return Response.success(
                 status=200,                             # TODO: Extract status from add_workout
