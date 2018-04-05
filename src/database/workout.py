@@ -78,8 +78,8 @@ def get_workout(workout_id):
             # Else create new exercise entry
             else:
                 output[name] = {
-                    'reps': [e['weight']],
-                    'weights': [e['repetitions']],
+                    'reps': [e['repetitions']],
+                    'weights': [e['weight']],
                     'start_times': [e['start_time']],
                     'end_times': [e['end_time']]
                 }
