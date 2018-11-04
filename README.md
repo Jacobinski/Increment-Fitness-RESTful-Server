@@ -407,16 +407,3 @@ This command will get information about all users in the database.
 Setup
 -----
 To avoid PyCharm from not properly locating certain includes, right click "src" and select Mark Directory as Sources Root.
-
-External Database Access
-------------------------
-Access the database through external SQL database software using the following
-configurations:
-
-**Host:** increment.cx9kpie1sol8.us-west-1.rds.amazonaws.com
-
-**Username:** admin
-
-**Password:** L69VLKJTEwgJVBHNBt
-
-**Port:** 3306
