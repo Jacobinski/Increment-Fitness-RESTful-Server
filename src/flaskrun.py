@@ -1,5 +1,6 @@
 import optparse
 from database import init_production_db, init_development_db
+from constants import CERT_FILE, KEY_FILE
 
 
 def flaskrun(app, socketio, default_host="0.0.0.0", default_port="80"):
@@ -37,5 +38,7 @@ def flaskrun(app, socketio, default_host="0.0.0.0", default_port="80"):
         app=app,
         debug=options.debug,
         host=options.host,
-        port=int(options.port)
+        port=int(options.port),
+        certfile=CERT_FILE,
+        keyfile=KEY_FILE
     )
